@@ -61,12 +61,10 @@ func handleConnection(conn *net.TCPConn, targetAddr *net.TCPAddr) {
 		stop <- true
 	}()
 
-	go func() {
-		_, err := io.Copy(conn, client)
-		fmt.Println(err)
-		stop <- true
-	}()
-
+	_, cpErr := io.Copy(conn, client)
+	if cpErr != nil {
+		fmt.Println("Could not copy from server to client")
+	}
 	<-stop
 
 }
